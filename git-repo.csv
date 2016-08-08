@@ -1,0 +1,193 @@
+,number,ring.number,ring.committer,ring.committed_date,ring.message,ring.domain,project,domain,committed_date,message,insertions,files,reason,manual.analysis
+1,250303b437855c2b50d052a05a08ed517423af8b,037552333182497e9e38bff984de44df0f93e54b,dwillemsen@google.com,2015/09/09 21:43:32,"Revert ""GITC: Always update the gitc manifest from the repo manifest""
+
+This reverts commit 250303b437855c2b50d052a05a08ed517423af8b.
+
+Change-Id: I1fd8af20f802553151aacb953c913f3305ca6057
+",others,git-repo,others,2015/09/09 19:35:56,"GITC: Always update the gitc manifest from the repo manifest
+
+This way any changes made to the main manifest are reflected in the gitc
+manifest. It's also necessary to use both manifests to sync since the
+information required to update the gitc manifest is actually in the repo
+manifest.
+
+This also fixes a few issues that came up when testing. notdefault
+groups weren't being saved to the gitc manifest in a method that matched
+'sync'. The merge branch wasn't always being set to the correct value
+either.
+
+Change-Id: I5dbc850dd73a9fbd10ab2470ae4c40e46ff894de
+",100,5,Defect introduced,
+2,38e4387f8eb8cffd6359d726c38a7c524fef07e3,9371979628a945a1caf526aeff84a1ac68a22efe,jrn@google.com,2015/03/17 18:29:58,"Revert ""Implementation of manifest defined githooks""
+
+This reverts commit 38e4387f8eb8cffd6359d726c38a7c524fef07e3.
+
+A ""repo init"" followed by ""repo sync"" is meant to be as safe as
+""git clone"".  In particular it should not run arbitrary code provided
+by the manifest owner.
+
+It would still be nice to have support for manifest-defined git hooks
+--- they'd just need a prompt like the upload RepoHook has.  Hopefully
+a later change can bring them back.
+
+Change-Id: I5ecd90fb5c2ed64f103d856d1ffcba38a47b062d
+Signed-off-by: Jonathan Nieder <jrn@google.com>
+",others,git-repo,others,2015/02/03 07:01:15,"Implementation of manifest defined githooks
+
+When working within a team or corporation it is often
+useful/required to use predefined git templates. This
+change teaches repo to use a per-remote git hook template
+structure.
+
+The implementation is done as a continuation of the
+existing projecthook functionality. The terminology is
+therefore defined as projecthooks.
+
+The downloaded projecthooks are stored in the .repo
+directory as a metaproject separating them from the users
+project forest.
+
+The projecthooks are downloaded and set up when doing a
+repo init and updated for each new repo init.
+
+When downloading a mirror the projecthooks gits are
+not added to the bare forest since the intention is to
+ensure that the latest are used (allows for company policy
+enforcement).
+
+The projecthooks are defined in the manifest file in the
+remote element as a subnode, the name refers to the
+project name on the server referred to in the remote.
+<remote name=""myremote ..>
+   <projecthook name=""myprojecthookgit"" revision=""myrevision""/>
+</remote>
+
+The hooks found in the projecthook revision supersede
+the stock hooks found in repo. This removes the need for
+updating the projecthook gits for repo stock hook changes.
+
+Change-Id: I6796b7b0342c1f83c35f4b3e46782581b069a561
+Signed-off-by: Patrik Ryd <patrik.ryd@stericsson.com>
+Signed-off-by: Ian Kumlien <ian.kumlien@gmail.com>
+",117,4,Defect introduced,introduced possibility to execute arbitrary code during sync
+3,52b99aa91d0fbb5ea363b5febb367d602dbc56db,cc1b1a703ddfc965c0375b80ac6900170fae9b13,anthonydking@slimroms.net,2015/03/30 21:53:25,"Revert ""Change the min git version from 1.7.2 to 1.8.2""
+
+This reverts commit 52b99aa91d0fbb5ea363b5febb367d602dbc56db.
+
+Change-Id: I01d93704c92f7af1ca2b36dbc9509ee1290e2d3c
+",others,git-repo,others,2015/03/18 21:43:39,"Change the min git version from 1.7.2 to 1.8.2
+
+This is needed for the --unshallow option of git fetch.
+
+Change-Id: Ifdc5cec6130315c643924328fea425f1b94cb04a
+",2,1,Obsolete solution,
+4,565480588d2bff4205b437862505e77382189811,3eb87cec5cae5f43becfe9fd1ff94de855cac08c,cco3@android.com,2014/11/10 23:49:32,"Revert ""Check for existence of refs upon initial fetch""
+
+This reverts commit 565480588d2bff4205b437862505e77382189811.
+
+We are reverting this change for 2 reasons:
+
+1) It introduced a bug for users using sync -c with a reference mirror.
+2) The fetch specs have recently changed to cause git to properly fail
+when we request a non-existent branch of a manifest, removing the need
+for this change.
+
+Change-Id: I0f63da9bfb40cf5ffafb7979f1b8c929a738fc7b",others,git-repo,others,2014/02/12 17:11:00,"Check for existence of refs upon initial fetch
+
+When we do an initial fetch and have not specified any branch etc,
+the following fetch command will not error:
+git fetch origin --tags +refs/heads/*:refs/remotes/origin/*
+
+In this change we make sure something got fetched and if not we report
+an error.
+
+This fixes the bug that occurs when we init using a bad manifest url and
+then are unable to init again (because a manifest project has been
+inited with no manifest).
+
+Change-Id: I6f8aaefc83a1837beb10b1ac90bea96dc8e61156
+",6,1,Defect reported,
+5,69998b0c6ff724bf620480140ccce648fec7d6a9,cd81dd6403fc8dbe6ec5920c517d9083902c3c1f,sop@google.com,2012/10/26 19:24:57,"Revert ""Represent git-submodule as nested projects""
+
+This reverts commit 69998b0c6ff724bf620480140ccce648fec7d6a9.
+Broke Android's non-gitmodule use case.
+
+Conflicts:
+	project.py
+	subcmds/sync.py
+
+Change-Id: I68ceeb63d8ee3b939f85a64736bdc81dfa352aed
+",others,git-repo,others,2012/10/23 23:08:58,"Represent git-submodule as nested projects
+
+We need a representation of git-submodule in repo; otherwise repo will
+not sync submodules, and leave workspace in a broken state.  Of course
+this will not be a problem if all projects are owned by the owner of the
+manifest file, who may simply choose not to use git-submodule in all
+projects.  However, this is not possible in practice because manifest
+file owner is unlikely to own all upstream projects.
+
+As git submodules are simply git repositories, it is natural to treat
+them as plain repo projects that live inside a repo project.  That is,
+we could use recursively declared projects to denote the is-submodule
+relation of git repositories.
+
+The behavior of repo remains the same to projects that do not have a
+sub-project within.  As for parent projects, repo fetches them and their
+sub-projects as normal projects, and then checks out subprojects at the
+commit specified in parent's commit object.  The sub-project is fetched
+at a path relative to parent project's working directory; so the path
+specified in manifest file should match that of .gitmodules file.
+
+If a submodule is not registered in repo manifest, repo will derive its
+properties from itself and its parent project, which might not always be
+correct.  In such cases, the subproject is called a derived subproject.
+
+To a user, a sub-project is merely a git-submodule; so all tips of
+working with a git-submodule apply here, too.  For example, you should
+not run `repo sync` in a parent repository if its submodule is dirty.
+
+Change-Id: I541e9e2ac1a70304272dbe09724572aa1004eb5c
+",341,5,Defect introduced,
+6,b4d43b9f664d6472b6c1e91c98f951037d00cea5,4e16c249817aa3b14a5d1ce767687f1d82c41249,david.pursehouse@sonymobile.com,2015/07/20 13:31:04,"Revert ""Add --prune option to fetch when syncing a mirror repo""
+
+For some users it is not desirable to remove refs that don't exist
+on the remote server when syncing a mirror repo.
+
+This reverts commit b4d43b9f664d6472b6c1e91c98f951037d00cea5.
+
+Change-Id: Ie849b66682138ef88da6cd1a5fbb27e993197dd7
+",others,git-repo,others,2015/04/30 01:32:37,"Add --prune option to fetch when syncing a mirror repo
+
+When syncing a mirror repo, add the --prune option to the fetch
+command to force removal of stale refs from the mirror.
+
+Change-Id: I4b43b2a5c86b9915627887c16f6569066f3ab978
+",2,1,Defect reported,
+7,ee1c2f5717fcc137ab887a4aae8a08d50a539b9a,34fb20f67c7bdca2b1321a40f2fd558f9a34d866,sop@google.com,2011/11/30 21:41:02,"Revert ""Default repo manifest settings in git config""
+
+This reverts commit ee1c2f5717fcc137ab887a4aae8a08d50a539b9a.
+
+This breaks a lot of buildbot systems. Rolling it back for now
+until we can understand what the breakage was and how to fix it.
+",others,git-repo,others,2011/11/29 22:24:58,"Default repo manifest settings in git config
+
+A default manifest URL can be specified using:
+  git config --global repo-manifest.<id>.url <url>
+
+A default manifest server can be specified using:
+  git config --global repo-manifest.<id>.server <url>
+
+A default git mirror reference can be specified using:
+  git config --global repo-manifest.<id>.reference <path>
+
+This will allow the user to use 'repo init -u <id>' as
+a shorter alternative to specifying the full URL.
+
+Also, manifest server will not have to be specified in the
+manifest XML and the reference will not have to be specified
+on the command line. If they are, they will override these
+default values however.
+
+Change-Id: Ifdbc160bd5909ec7df9efb0c5d7136f1d9351754
+Signed-off-by: Victor Boivie <victor.boivie@sonyericsson.com>
+",43,3,Defect introduced,

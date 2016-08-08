@@ -1,0 +1,841 @@
+number,ring.number,ring.committer,ring.committed_date,ring.message,ring.domain,project,domain,committed_date,message,reason,manual.analysis,dev_dates
+0efb17e0532db6bf523def97ec28ba50ae2a728f,13641f4f46189a069f4cb3353dd85a672b4229da,sop@google.com,2013-07-12,"Revert ""Add submit_action to ChangeInfo""
+
+This reverts commit 0efb17e0532db6bf523def97ec28ba50ae2a728f.
+This is already available on a revision as /submit_type.
+Clients that need the data should fetch it from there.
+
+Change-Id: Ia6ba213117c4a5c2a09d1129ab741871dfd31a22
+",android,gerrit,android,2013-07-12,"Add submit_action to ChangeInfo
+
+Export the action the server will use to merge the change,
+allowing it to be shown in the web UI.
+
+Change-Id: I4c61924f0aca6487f849c20e6e08f6fe80dffd8f
+",Defect introduced,(1-2 sentences),0
+28c680bc28fdb7c6f806f2868fecfd51d226cf7a,70968dd6e054dd4878fc3ce1d23391243af9dd44,sop@google.com,2012-06-13,"Revert ""Change style of commit message box display and use UiBinder.""
+
+This reverts commit 28c680bc28fdb7c6f806f2868fecfd51d226cf7a.
+
+The UI is too damn ugly.
+
+Change-Id: Id0139657535537e7e12becad4ace4a643f5dbe94
+",android,gerrit,qualcomm,2012-06-07,"Change style of commit message box display and use UiBinder.
+
+Put a box around the commit message with a title and emphasis on the
+commit summary. The <pre> element for the body is hidden if only the
+summary is submitted.
+
+Changed CommitMessageBlock widget to use UiBinder.
+
+Change-Id: I36fbe60cb2f4e90b7b9e9145f7af4e2b0776fa85
+",Wrong direction,(1-2 sentences),6
+2c29e73e6ba82067b923b04ff0f7bc8c88af3168,fd4af1bb50c2516de7766b70ea0de75c176749c3,sop@google.com,2013-05-17,"Revert ""Move patch script class to the server tree.""
+
+This reverts commit 2c29e73e6ba82067b923b04ff0f7bc8c88af3168.
+Appears to have broken the acceptance test suite.
+
+Change-Id: I7404548bce12d9cc60f9dc80fae44c9a9e2ffafe
+",android,gerrit,android,2013-05-16,"Move patch script class to the server tree.
+
+The PatchScriptFactory and PatchScriptBuilder were previously in the
+httpd tree. Move them to the server tree so the implementation of the
+revision diff REST API can share the logic.  Also, update
+PatchScriptFactory to implement Callable instead of Handler, so
+there is not a circular dependency.
+
+Change-Id: Ic20fbf81a2da5ad5e2fd5c3542e6caa47df33cea
+",Defect introduced,(1-2 sentences),1
+3c4943675daa6c6c0bbc5623116088d2848e7f36,0d2fb382e3a94d49f5cbed63b4458a6747cb202e,sop@google.com,2013-06-25,"Revert ""Log all exceptions that occur while replacing a change in the index""
+
+This reverts commit 3c4943675daa6c6c0bbc5623116088d2848e7f36.
+Throwing Exception here is not necessary, IOException is sufficient.
+
+Change-Id: Ie17fdeb33acbd31a272e56cfba072bf2f324ae7a
+",android,gerrit,android,2013-06-24,"Log all exceptions that occur while replacing a change in the index
+
+Replacing a change in the Lucene index is done in the background.
+Currently only IOExceptions are caught and logged in the Runnable.
+RuntimeExceptions are silently ignored, which makes it hard to see
+if and why indexing failed, e.g. reindexing changes from the classes
+that implement the REST API is currently failing with a
+ProvisionException due to a missing requestScopePropagator and this
+exception is not visible from the logs.
+
+Change-Id: Ia4ed727a1c38eded514992cbbf739ad52ac10d41
+Signed-off-by: Edwin Kempin <edwin.kempin@sap.com>
+",Wrong direction,(1-2 sentences),1
+3fc98f99b4bcb87be6c3d37ab92014ee68e1c627,5b16d0f096735a76862bf25e0c9ca83527f8daff,sop@google.com,2012-06-18,"Revert ""Display the approval table on the Publish Comments screen.""
+
+This reverts commit 3fc98f99b4bcb87be6c3d37ab92014ee68e1c627.
+The display was buggy and listed users as ""Anonymous Coward""
+even though they had a Full Name supplied in the Account. I
+don't have time to debug this myself, but users are unhappy
+the table is confusing/useless with everyone being called
+an Anonymous Coward so the change goes out.
+
+Bug: issue 1383
+CC: Joe Hansche <jhansche@myyearbook.com>
+Change-Id: Ibe9f70bc001df4b3a04ee2eb4dfa194f75e5b3f0
+",android,gerrit,others,2012-05-16,"Display the approval table on the Publish Comments screen.
+
+The ApprovalTable (displayed only on the ChangeDetail screen currently)
+has been added to the PublishCommentScreen, in order to see all
+existing votes, and which other users are set as reviewers of the
+change.
+
+ApprovalTable also gives hints as to which votes are still required
+before the change can be submitted, and it gives the reviewer the
+option to add additional reviewers directly from the comment page.
+
+Bug: Issue 1383
+Change-Id: Ie42f86dc1509749f8cfa4fcea08e2ebf5a793ede
+",Defect reported,(1-2 sentences),33
+41b51ccd9c740b4f93e0b94f8b9375b4f7a8d762,1796c715a23e92c78da7fb38fb93b95c60c002c8,sop@google.com,2013-07-11,"Revert ""Send notification email for new changes created by ChangeInserter""
+
+This reverts commit 41b51ccd9c740b4f93e0b94f8b9375b4f7a8d762.
+Servers don't run:
+
+   Guice creation errors: 1) No implementation for
+     com.google.gerrit.server.util.RequestScopePropagator
+     was bound
+
+Change-Id: I484fae161fbc0ce74c8dbb6b9c532476bcac810b
+",android,gerrit,sonymobile,2013-07-11,"Send notification email for new changes created by ChangeInserter
+
+New change notification was not being sent for changes created by
+the ChangeInserter.  I.e. changes created by using the revert and
+cherry pick buttons on the Web UI.
+
+Update the ChangeInserter to send notification email to reviewers
+for new changes.
+
+Allow the caller to set extra CC recipients, or suppress sending
+of emails.
+
+Remove the new change email notification sending from ReceiveCommits
+as this is now handled by the ChangeInserter.
+
+Change-Id: I849fa533c17c7b4d3b7688832584490c942c76ba
+",Defect introduced,(1-2 sentences),0
+50a7a3a61d767c376e5f0f7c609c301448e112be,9aaf3d15e39963cfc844a8f9f87292b743d08bda,dborowitz@google.com,2013-09-12,"Revert ""Make SubmitRecord.Label's fields @Columns""
+
+This reverts commit 50a7a3a61d767c376e5f0f7c609c301448e112be.
+
+We are no longer storing labels in the secondary index, so this change
+is no longer necessary.
+
+Conflicts:
+	gerrit-lucene/src/main/java/com/google/gerrit/lucene/LuceneChangeIndex.java
+
+Change-Id: I68cdd372e08ccacc79bea76eadf87c1303064065
+",android,gerrit,android,2013-09-10,"Make SubmitRecord.Label's fields @Columns
+
+We want to serialize these label values into the secondary index so we
+can avoid database lookups and submit rule evaluation when rendering
+change tables. The easiest way to do this is to use Gerrit's protobuf
+support to convert them to protos to store in the index. This is built
+around @Column annotations, so use that.
+
+Move to the reviewdb package to pick up the necessary gwtorm
+dependency.
+
+Change-Id: I02b4a14404a8d8d72452fea68f0c25f3cbb377f8
+",Obsolete solution,(1-2 sentences),2
+c545c0901241314190cac02a24aa95f831dd0572,31f124e8ac837fb427c1b015ede96cb03bfc0a24,edwin.kempin@sap.com,2012-10-31,"Revert ""Perform change update on multiple threads""
+
+This reverts commit c545c0901241314190cac02a24aa95f831dd0572.
+
+This commit is reverted because it breaks pushing via HTTP.
+
+Change-Id: Ica20fb9ce606f425e57737ebe92eccd2c8739fb9
+Signed-off-by: Edwin Kempin <edwin.kempin@sap.com>
+",others,gerrit,android,2012-08-04,"Perform change update on multiple threads
+
+When multiple changes need to be created or updated for a single push
+operation they are now inserted into the database by parallel threads,
+up to the maximum allowed thread count. The current thread is used
+when the thread pool is already fully in use, falling back to the
+prior behavior where each concurrent push operation can do its own
+concurrent database update. The thread pool exists to reduce latency
+so long as there are sufficient threads available.
+
+This helps push times on databases that are high latency, such as
+database servers that are running on a different machine from the
+Gerrit server itself, e.g. gerrit.googlesource.com.
+
+The new thread pool is disabled by default, limiting the overhead to
+servers that have good latency with their database, such as using
+in-process H2 database, or a MySQL or PostgreSQL on the same host.
+
+Change-Id: I7d7368cee99a47e3f2ad1e753cc3f7e1c82d37b0
+",Defect reported,(1-2 sentences),88
+db4e14f1a8d0a0aa0b4b39ac74242ac0962e7f47,5ee934dfebcc39b8a28cd34fd03fa38ce662a375,noreply-gerritcodereview@google.com,2013-05-06,"Revert ""Run Documentation formatting in parallel""
+
+This reverts commit db4e14f1a8d0a0aa0b4b39ac74242ac0962e7f47.
+Running AsciiDoc in parallel swamps some hardware, and there
+is no portable way to get the number of available cores.
+
+Since it is apparent the contributors want to keep using
+Maven, lets just go with correct and slow.
+
+Change-Id: I71c2c902dc1553b0316c21aaf48b481ffe0aaec6
+",android,gerrit,android,2013-05-06,"Run Documentation formatting in parallel
+
+AsciiDoc is slow. Run 8 forks in parallel, assuming most developers
+building Gerrit need at least 4 cores to get through the GWT builds.
+
+Change-Id: Icf1a244d528f91aa5b8fbc10aa905ce3b32a3535
+",Wrong direction,(1-2 sentences),0
+f6159bed862ce09d8e801fd02d50ec3476f53634,daf8bd4f90b5ea36890c61b8b32a860356bee907,jrn@google.com,2013-10-01,"Revert ""Fix: Permission.PUSH_MERGE checking for push bypassing Gerrit""
+
+This reverts commit f6159bed862ce09d8e801fd02d50ec3476f53634.
+
+Broke direct push of merges for all projects that followed
+documentation and included a 'Push Merge Commit' ACL prefixed with
+""refs/for/"".
+
+The fix for the 'Push Merge Commit' handling looks good, but it should
+be accompanied by a migration that adjusts existing configuration.
+
+Change-Id: Id2a25551d8e9953cd1e678086d491133f5f2d987
+",android,gerrit,sonymobile,2013-09-25,"Fix: Permission.PUSH_MERGE checking for push bypassing Gerrit
+
+Gerrit always check Permission.PUSH_MERGE on branches
+starting with 'refs/for' even for the push bypassing
+Gerrit, e.g. creating a new branch using a merge with
+command like:
+   git push origin   <merge-sha1>:refs/heads/<new-branch-name>
+As this is not for review, the `Push Merge` is expected
+to exist on 'refs/heads/<new-branch-name>', not on
+'refs/for/refs/heads/<new-branch-name>'.
+
+This commit fix it to avoid user confusion when granting
+access to 'refs/heads/*' doesn't allow them to push
+directly any merge commits bypassing the code review.
+
+Issue: 1072
+Change-Id: Ib76d72a3d6435429b14f696f2833ca5cd847ba63
+",Defect introduced,(1-2 sentences),6
+0a7f8e79eb9e8d54739d8d3c40dea93e789b5801,aa4e79f5486a1b7a8ac6976e78d3a9b77a5fd04c,sop@google.com,2013/12/01 01:23:52,"Revert ""Add init step for installing the 'Verified' label""
+
+This reverts commit 0a7f8e79eb9e8d54739d8d3c40dea93e789b5801.
+New site initialization is broken with InitLabels in the environment.
+
+Change-Id: Ied28bc2e990f21df20265675afadaef9dae0890d
+",others,gerrit,others,2013/11/30 08:39:56,"Add init step for installing the 'Verified' label
+
+Change-Id: Ia2a50ebe5719e54588db8652e4fb22ae658ae4da
+Signed-off-by: Edwin Kempin <edwin.kempin@sap.com>
+",Defect introduced,,1
+1df5a8f00fbe69ec3b386ed3487a2ae0c229a966,3e15684ca750382c9ba10877785ea9e21e311c52,sop@google.com,2014/01/02 17:50:22,"Revert ""SideBySide2: Track SkipBar instances by the starting line""
+
+This reverts commit 1df5a8f00fbe69ec3b386ed3487a2ae0c229a966.
+
+Tracking the bar using a SortedMap is not necessary.  The skip
+bars are removed automatically by CM3 now when search enters into
+a skipped region.
+
+Change-Id: Ia3194692c7a8e7c098bc97d9dc2ebd3fa89fc5ca
+",others,gerrit,others,2013/12/31 00:55:52,"SideBySide2: Track SkipBar instances by the starting line
+
+Use a SortedMap to track the SkipBars, indexed by first line number
+hidden by the bar. This simple refactoring allows for a future
+change to find if a line is covered by a skip bar.
+
+Change-Id: Iee71856e0c24140a10c0ee4938abfcef6490d6e9
+",Temporary workaround,Fix for a limitation in included library that was improved in a later version of the library,2
+27234fd184c63a70fb243d12dafd7a398ea6e14f,9323223d2f951179381f61424fb73b3ac10ef96c,edwin.kempin@sap.com,2013/11/11 09:22:59,"Revert ""Rename css file in GWT plugin archetype""
+
+This reverts commit 27234fd184c63a70fb243d12dafd7a398ea6e14f.
+
+The '.css' files of the different plugins must of unique names. Having
+several plugins with a 'plugin.css' is not working and thus the rename
+makes no sense.
+
+Change-Id: I599bbb201556985cb5a7f4f13aabe7b8bc0decf3
+",others,gerrit,others,2013/11/11 08:05:45,"Rename css file in GWT plugin archetype
+
+The old name ('hello.css') doesn't fit to any plugin which is why this
+file needs to renamed after a project has been generated. The new name
+('plugin.css') is more suitable and doesn't need to be changed.
+
+Change-Id: Ib5d132a9518f3faa29b85e35117c81d864f90323
+Signed-off-by: Edwin Kempin <edwin.kempin@sap.com>
+",Defect introduced,,0
+283f38a2c360cb103ed2d773bb011d2007456995,d72c509d9a8de477c361c5b980c86f5235b96d6a,sop@google.com,2014/05/09 15:18:34,"Revert ""Add extension point to register JGit PreUploadHooks""
+
+This reverts commit 283f38a2c360cb103ed2d773bb011d2007456995.
+Change I5d0aeac51b83bf14150fa3036f71965cf2051243 offers more
+flexibility to the plugin author by passing in more data.
+
+Change-Id: I71bd403375c0ca53e4d8c2f54ff46f431fd6725d
+",others,gerrit,others,2014/05/08 22:38:30,"Add extension point to register JGit PreUploadHooks
+
+Very similar to the PostReceiveHook change that Saša made in
+I0212eab6e4867819ebe7ecc7fc5532c26bb82282, it is conceivable that
+a plugin may want to attach a PreUploadHook, such as for displaying
+messages to a user.
+
+Change-Id: If8e8f4e0b3774e4360048b7d3719d10f66719c78
+",Wrong direction,Replaced by a better implementation,1
+2efc3e7efbb566f3c9f31e3eb17e235a88c95adc,c391278b1c47a5053efc911d3a38fa452e4c66c8,david.pursehouse@sonymobile.com,2014/12/24 08:42:12,"Revert ""Allow tests to use hamcrest matchers directly""
+
+This reverts commit 2efc3e7efbb566f3c9f31e3eb17e235a88c95adc.
+
+It's no longer necessary to use the hamcrest matchers since we
+have the Google Truth library.
+
+Change-Id: Ib2cddfc52b3eeef4721b263ea1d693f45ac3cf15
+",others,gerrit,others,2014/09/30 00:30:35,"Allow tests to use hamcrest matchers directly
+
+Break hamcrest-core out into a separate BUCK file, and add dependency
+on hamcrest-library, which is needed to be able to use the Matcher
+methods.
+
+Change-Id: I15919f674137ce7a50fde6e6ad3422f4887ea306",Unnecessary feature,Removes dependency on libraries that are unnecessary,85
+3435c536a6024fc2a92610be452ab4d85ae5268c,985201b5f959a32b18458822b54efd47b1408f44,david.pursehouse@sonymobile.com,2015/04/06 03:33:06,"Revert ""Revert ""Allow configuration of SSH rekey values""""
+
+This reverts commit 3435c536a6024fc2a92610be452ab4d85ae5268c.
+
+Change-Id: I4efe2e209ff05e68d8add596025622e76646bfde
+",others,gerrit,others,2014/12/10 03:46:19,"Revert ""Allow configuration of SSH rekey values""
+
+Not supported in sshd 0.9.0 which is being merged into master
+via stable-2.9
+
+This reverts commit 6f721702f07249c4babdd6d32d87765005081dcc.
+
+Change-Id: Ie505d6211eff9d2aab6ab5c6125f926d2aa2237e
+",Obsolete solution,Removes a feature that is no longer supported after downgrading to an earlier version of a dependency library,117
+48bf33b2ebf58d501d5745a64a76d7b47c85c407,c7f58ccbd88c08f3e64c4753f5aa8e577288d204,david.pursehouse@sonymobile.com,2015/04/07 10:23:22,"Revert ""Revert ""SSH: Simplify CachingPublicKeyAuthenticator implementation""""
+
+This reverts commit 48bf33b2ebf58d501d5745a64a76d7b47c85c407.
+
+Change-Id: I145d159327796ee524e05cc2019bb355f245a94b
+",others,gerrit,others,2014/12/10 03:46:16,"Revert ""SSH: Simplify CachingPublicKeyAuthenticator implementation""
+
+This change is not compatible with SSHD 0.9.0 which is being brought
+into master by merges from stable-2.9
+
+This reverts commit 64d12ce359c0ea69bb1249577374e5e781f7d7b3.
+
+Change-Id: Ib0ae8603c5d6d04f8df76775566418f12a0fc7c1
+",Obsolete solution,Removes a feature that is no longer supported after downgrading to an earlier version of a dependency library,118
+56ba292a80694b086a6b0b5989d4609842416ea9,9b75bd574a01a88091b0f662f27bc2fa566b67b6,sop@google.com,2014/08/29 19:11:54,"Revert ""Do not ask to register an email address if not supported by user store""
+
+This reverts commit 56ba292a80694b086a6b0b5989d4609842416ea9.
+Batch reindex is broken and now it requires an LDAP directory connection.
+
+Change-Id: I944f3bcd0b20d05b82c7db4953eb3b1952da736e
+",others,gerrit,others,2014/08/15 09:35:26,"Do not ask to register an email address if not supported by user store
+
+The committer/author uploader validators issued an error message upon
+failed validation that suggested to the user to register a matching
+email address.
+
+Some backing user stores do not support this. In this case, this
+misleading message is surpressed now.
+
+Change-Id: I5e7f54e0a9a3586205228cde41afae2f6346a90b
+",Defect introduced,,14
+5887767774b8273ab56b7c40a5a3d4fc9e553557,ef74c883e6cc07c0a55f14960dfc31b0feafc39e,david.pursehouse@sonymobile.com,2014/12/10 02:50:38,"Revert ""SSHD: Allow ECDSA based public key authentication""
+
+SSHD was downgraded to 0.9.0 (plus selected bug fixes) on the
+stable-2.9 branch and will be merged up to master soon.
+
+ECDSA is not supported in that SSHD version, so it must be
+reverted.
+
+This reverts commit 5887767774b8273ab56b7c40a5a3d4fc9e553557.
+
+Change-Id: Ia480ef6366ebcbaffc0c9f23c1b01e171c8a9203
+",others,gerrit,others,2014/09/12 12:57:27,"SSHD: Allow ECDSA based public key authentication
+
+Bug: issue 2797
+Change-Id: I2fd94890d75901ce6e31f9dea75a652aba7ba456
+",Obsolete solution,Removes a feature that is no longer supported after downgrading to an earlier version of a dependency library,89
+5db3bba3e2d85662bacedc5d2f215fff7d8d2805,1c48a7ee1c8ac9bab6e3606828bc7a03949b7364,sasa.zivkov@sap.com,2014/09/30 08:53:50,"Revert ""Use javax.inject.Inject instead of com.google.inject.Inject""
+
+This reverts commit 5db3bba3e2d85662bacedc5d2f215fff7d8d2805.
+
+I was too fast to submit 5db3bba. Besides forgetting to submit the
+referenced changes in some submodules some people reported issues
+with the interception of the javax.inject.Inject in some JEE containers.
+
+Change-Id: I931ad329d2e7be6f6ce804b8395489a021c8240b
+",others,gerrit,others,2014/09/29 23:36:18,"Use javax.inject.Inject instead of com.google.inject.Inject
+
+The Guice team is discouraging use of its specific annotation where
+possible, to increase JSR330 compliance.
+
+Leave optional injection alone for now, which needs to be manually
+replaced with OptionalBinder.
+
+Change-Id: I4f53a518ba6f36fd67af12f3540dc44cbad07ff8
+",Defect introduced,Removes a feature that depends on functionality not available in current version of a dependency library,1
+5f88589617a6e035a7e256bddb7ef9aa7462fd2f,08dd1f54857e93632b773292aaf34a5069818cf8,sop@google.com,2013/12/05 18:24:51,"Revert ""Let change message just be on the top of comments.""
+
+This reverts commit 5f88589617a6e035a7e256bddb7ef9aa7462fd2f.
+
+Focus is confused with the radio buttons on top of the text.
+Trying to fix the focus ordering has broken other features,
+like having the cursor at the end of the text box when using
+the reply button from a message. Put the widget ordering back.
+
+Change-Id: I179aac7150d54fdda2aecf96d54248eb476ef2fc
+",others,gerrit,others,2013/12/03 07:57:02,"Let change message just be on the top of comments.
+
+In the reply box let change cover message just be on the top
+of the comments like that in 'History' list and email content.
+
+Change-Id: Ifd8e718375d9140c9599b708ed586bf3e6ad473b",Defect introduced,,2
+64d12ce359c0ea69bb1249577374e5e781f7d7b3,48bf33b2ebf58d501d5745a64a76d7b47c85c407,david.pursehouse@sonymobile.com,2014/12/10 03:46:16,"Revert ""SSH: Simplify CachingPublicKeyAuthenticator implementation""
+
+This change is not compatible with SSHD 0.9.0 which is being brought
+into master by merges from stable-2.9
+
+This reverts commit 64d12ce359c0ea69bb1249577374e5e781f7d7b3.
+
+Change-Id: Ib0ae8603c5d6d04f8df76775566418f12a0fc7c1
+",others,gerrit,others,2014/10/09 06:20:08,"SSH: Simplify CachingPublicKeyAuthenticator implementation
+
+In the context of [1] the same class was implemented upstream and since
+upgrade to the latest SSHD release is available. So that we don't need
+to duplicate the logic, but only supply right authenticator instance
+(DatabasePubKeyAuth authenticator in our case) in constructor.
+
+[1] https://issues.apache.org/jira/browse/SSHD-300
+
+Change-Id: I402d4487ce98f030996f7c7f878c564b60ea3dca
+",Obsolete solution,Removes a feature that is no longer supported after downgrading to an earlier version of a dependency library,62
+6f721702f07249c4babdd6d32d87765005081dcc,3435c536a6024fc2a92610be452ab4d85ae5268c,david.pursehouse@sonymobile.com,2014/12/10 03:46:19,"Revert ""Allow configuration of SSH rekey values""
+
+Not supported in sshd 0.9.0 which is being merged into master
+via stable-2.9
+
+This reverts commit 6f721702f07249c4babdd6d32d87765005081dcc.
+
+Change-Id: Ie505d6211eff9d2aab6ab5c6125f926d2aa2237e
+",others,gerrit,others,2014/10/14 00:48:42,"Allow configuration of SSH rekey values
+
+A long standing bug in SSHD Mina where packets gets out of
+order during the rekey phase, will force the ControlMaster
+to disconnect during high load (repo -jxx):
+
+  Protocol error: expected packet type 31, got 94
+
+This fix allows us to change the trigger limits for rekeying:
+
+  rekeyTimeLimit - Default value 1h
+  rekeyBytesLimit - Default value 1073741824 (bytes, 1GB)
+
+The rekeyTimeLimit can be set to 0 to disable the trigger.
+
+The rekeyBytesLimit can never be set to lower than 32, (Mina
+will automatically raise the value to 32 if lower).
+
+To get rid of the Protocol error by using these configuration
+values, you can set rekeyTimeLimit to 0 (disables it) and also
+set a very high rekeyBytesLimit. This will ensure that the bug
+prone rekeying logic in SSHD Mina will never be executed.
+
+Change-Id: Ic196c99266252f47659b26af645b26f77fc15ebd
+",Obsolete solution,Removes a feature that is no longer supported after downgrading to an earlier version of a dependency library,57
+731967591ef98ab3c94691ba9dc0f217630dda76,3b22674ba6ff2bc3c78e895e2c4a55ed33964508,david.pursehouse@sonymobile.com,2014/03/22 14:45:52,"Revert ""Buck: Preserve SNAPSHOT suffix in Maven artifact names""
+
+This prevents gwtorm snapshots from being downloaded from the
+Gerrit maven repository.
+
+This reverts commit 731967591ef98ab3c94691ba9dc0f217630dda76.
+
+Change-Id: I17aad32606d4afb1c0654ffca0747f660c148520
+",others,gerrit,others,2014/01/11 12:54:52,"Buck: Preserve SNAPSHOT suffix in Maven artifact names
+
+Drop the code that removes SNAPSHOT suffix in artifact name. This prevents
+Gitblit plugin from fetching its custom artifact from Gerritforge Maven
+repository, making from the right name:
+
+  com/gitblit/gitblit/1.4.0-SNAPSHOT/gitblit-1.4.0-SNAPSHOT.jar
+
+the broken artifact name:
+
+  com/gitblit/gitblit/1.4.0-SNAPSHOT/gitblit-1.4.0.jar
+
+Change-Id: Ib16f032a9fda3ef61570a85d97659cd3ce02f5f2",Defect reported,,70
+7dd52e61e09366422bc8205c8c241486b7f7ae87,cf52d85d45f94808a4010edf4b6134dc25a75fca,sop@google.com,2014/05/08 20:16:50,"Revert ""ChangeScreen2: Rename Submit to Merge Change""
+
+This reverts commit 7dd52e61e09366422bc8205c8c241486b7f7ae87.
+Users are confused by calling the button Merge Change.
+
+Some projects use submit type fast-forward only, which never creates
+a merge. Some are cherry pick, which is confusing to have a button
+called ""Cherry Pick"" next to another called ""Merge Change"".
+
+Change-Id: I5d7e1d21a1157d1df8f808cda2ff967a65645979
+",others,gerrit,others,2013/12/17 23:31:19,"ChangeScreen2: Rename Submit to Merge Change
+
+Submit can be confusing for new users, it can be misread as submit
+the change to reviewers for review and consideration. Relabel the
+button as ""Merge Change"", which should scare someone a bit more
+before clicking.
+
+Update the hover title to include the branch its going to submit to.
+
+Change-Id: Ibe35479424b09f66f69b4c59a3d2361a85b331d9
+",Unnecessary feature,Removes a new UI feature that users disliked,142
+858e308f9212fdba189f90fe09b9f023d13eeb0f,b555ff7934a93d509531bcce9af085118b8c7462,david.pursehouse@sonymobile.com,2015/02/17 05:15:08,"Revert ""MergeTip: Extract null-safe factory method""
+
+Breaks the acceptance tests:
+
+- SubmitByRebaseIfNecessaryIT
+- SubmitByFastForwardIT.
+
+This reverts commit 858e308f9212fdba189f90fe09b9f023d13eeb0f.
+
+Change-Id: Ie177acac712c584c056105aa909c2263a7ee36bf
+",others,gerrit,others,2015/02/13 23:54:14,"MergeTip: Extract null-safe factory method
+
+Change-Id: I3cc331050732f28b5341384f729f48cfb0311131
+",Defect introduced,,4
+875590301a68377367f14f82fc6f1056a3a17499,726235628d5bb357e4fe1f81453a61b34877f78c,sop@google.com,2013/12/13 00:18:28,"Revert ""SideBySide2: Center content in the browser window""
+
+This reverts commit 875590301a68377367f14f82fc6f1056a3a17499.
+
+The auto margin left/right and width was making the view too wide for
+15"" displays, causing the navigation arrows and overview gutter to be
+completely cut off.
+
+Change-Id: I0c730a901044344b5027cff91928a8c64c8c599b
+",others,gerrit,others,2013/12/11 08:16:35,"SideBySide2: Center content in the browser window
+
+The view runs at a fixed maxium width of 1484 pixels.  If the browser
+window is wider than this width, center the view in the middle and
+distribute the space evenly on either side.
+
+Change-Id: I4c557c7a36e07a5b6ef9d4f2b725c0ea8d336a3f
+",Defect introduced,,2
+a1eae0d64a7574fe770612a5b864495806762608,d373d5388cb3903e214fff59c9d09350f6c41643,sop@google.com,2014/04/28 21:30:26,"Revert ""Reject inline comments on files that do not exist in the patch set""
+
+This reverts commit a1eae0d64a7574fe770612a5b864495806762608.
+Query unit tests were broken:
+
+Failed target: //gerrit-server:query_tests
+FAIL com.google.gerrit.server.query.change.LuceneQueryChangesTest
+FAIL com.google.gerrit.server.query.change.LuceneQueryChangesV7Test
+FAIL com.google.gerrit.server.query.change.RegexPathPredicateTest
+
+Change-Id: Iabf972a13ed373c181084373bbf8ed754847c54d
+",others,gerrit,others,2014/04/11 11:23:00,"Reject inline comments on files that do not exist in the patch set
+
+Bug: issue 2583
+Change-Id: Icaf213f890c10f7f4207e1c3e48c1c8d841bd6d1
+Signed-off-by: Edwin Kempin <edwin.kempin@sap.com>
+",Defect introduced,,17
+a5959d2216bee502c70ba7c285b2e3873d69d190,c7dedf989cf1717548b0793490d0be9506c1bc2e,sasa.zivkov@sap.com,2014/12/05 13:04:59,"Revert ""SSHD: Prevent double authentication for the same public key""
+
+This reverts commit a5959d2216bee502c70ba7c285b2e3873d69d190.
+
+This revert is necessary because of downgrade to the SSHD 0.9.0.
+
+Change-Id: Ia41ad2d9a713ddd515bc383923844227b676070f
+",others,gerrit,others,2014/03/24 19:12:59,"SSHD: Prevent double authentication for the same public key
+
+Openssh client sends two requests, one without a key signature to verify
+that the public key is acceptable and the second one with the signature
+after having loaded the private key and signed some data for actual
+verification.
+
+To prevent that the PublickeyAuthenticator#authenticate is called twice
+cache the authentication status for session and public key.  Implement
+SessionListener to clean up the cache entry when session is destroyed.
+
+This is a workaround for SSHD bug [1].
+
+[1] https://issues.apache.org/jira/browse/SSHD-300
+
+Inspired-By: Guillaume Nodet <gnodet@apache.org>
+Change-Id: Ie8caebd6762125a754c46d821b3c7af2a10edd2b
+",Obsolete solution,Removes a feature that is no longer supported after downgrading to an earlier version of a dependency library,256
+a76cc7223f112494702b2cb13c9c1ae65b153d68,379154e19f471644ea7696673de65561717cd5c7,sop@google.com,2014/01/15 17:54:34,"Revert ""Include trailing newline in last skip.""
+
+This reverts commit a76cc7223f112494702b2cb13c9c1ae65b153d68.
+Leave the last line of the file outside of the skip region so
+page down has somewhere to land without entering and expanding
+the tail of the file.
+
+Change-Id: Ib9c1d5d3948d3f32b7e7ad5696e6ad6d09000ca6
+",others,gerrit,others,2014/01/07 19:06:07,"Include trailing newline in last skip.
+
+We always add a trailing newline in SideBySide2. Allow the last skip bar
+(if any) to cover it.
+
+Change-Id: I4147cada6020e795b692d4ad90632b5bcfdfa964
+",Defect introduced,,8
+b032a529f83892dfbdfb375c47a90d89756dd8ab,6db280663f836096c30a9626e7170f4a36d8cc1f,david.pursehouse@sonymobile.com,2014/09/01 01:19:20,"Revert ""Make VisibleRefFilter.Filter reuse the refs passed from JGit.""
+
+This reverts commit b032a529f83892dfbdfb375c47a90d89756dd8ab. This
+commit introduced an issue where tags were not replicated under certain
+circumstances.
+
+Bug: Issue 2500
+Bug: Issue 1748
+Change-Id: I9c902b99c7f656c7002cf3eab9e525f22a22fb85
+",others,gerrit,others,2012/06/12 13:50:26,"Make VisibleRefFilter.Filter reuse the refs passed from JGit.
+
+Change-Id: Iadec426e9c1752b1b08b534834600c17ba2d49e2
+",Defect reported,,811
+b07a26f2ebb24d1e9a9a20c7683fed55aab9a6bd,d29c67d4a26a88fd7df52e605ee42be8ba6a8cb5,cranger@google.com,2014/01/13 16:29:51,"Revert ""Scroll from the window when rendering entire file""
+
+This reverts commit b07a26f2ebb24d1e9a9a20c7683fed55aab9a6bd.
+Codemirror expects to be able to scroll Codemirror instance in
+order to execute any line navigation. Furthermore, horizontal
+scrollbars are rendered in the Codemirror at the bottom of the
+document (not window). In order to have a ""window"" scroll bar,
+we would likely have to steal the scroll bars inside Codemirror
+and make it look like the window scroll bar.
+
+Change-Id: I3199edc039ba716723eaf8032eaa5355c2100666
+",others,gerrit,others,2014/01/08 18:21:26,"Scroll from the window when rendering entire file
+
+Since we are rendering the entire file, we can give the normal window
+scroll bar. Now that the height of CodeMirror is the full height of
+the browser window, the side bar gutter is useless. Disable the gutter
+when the entire file is displayed.
+
+Change-Id: I97fb563571ab7b5541e8e18284feb90d5501cc1a",Defect introduced,,5
+ba41a8381946594e291840715c2a20c66ef92e45,2df7278a9fe061a5e3595a42868546aa566a091d,sop@google.com,2013/12/13 19:43:28,"Revert ""ChangeScreen2: Auto-focus to submit button""
+
+This reverts commit ba41a8381946594e291840715c2a20c66ef92e45.
+
+Users do not like the auto-focus on submit. The button is too
+dangerous to be clicked because code might actually land into
+the project after being reviewed and approved.
+
+Change-Id: Ia60b22b4e8f0fd607f44657572b4c7dabdb73352
+",others,gerrit,others,2013/12/07 18:44:42,"ChangeScreen2: Auto-focus to submit button
+
+After scoring a change with a maximum value in a radio group focus to
+the submit button if it is enabled.  This allows committers to submit
+a change with just Return/Enter/Space after posting Code-Review+2.
+
+Change-Id: Ide28d62c24cfe7fd7e044d8b3b74ac5d246b8739
+",Unnecessary feature,Removes a new UI feature that users disliked,6
+bde8e9ac6f26a85c1a757ac0fa298f8b0c3c5783,e2921b62f6c09d574a25aaa079d538ac499ef382,david.pursehouse@sonymobile.com,2015/04/06 03:26:07,"Revert ""Downgrade SSHD to 0.9.0-4-g5967cfd""
+
+All versions of SSHD since release 0.10 were suffering from exhaustion
+of thread pool. Number of valuable features had to be reverted to
+downgrade the SSHD version to 0.9. This blocking bug [1] was fixed [2]
+and released in 0.14.0.
+
+Update to the new version of SSHD and revert the downgrade.
+
+This reverts commit bde8e9ac6f26a85c1a757ac0fa298f8b0c3c5783.
+
+[1] https://issues.apache.org/jira/browse/SSHD-348
+[2] https://git-wip-us.apache.org/repos/asf?p=mina-sshd.git;a=commitdiff;h=964e76890cf56da4491199860d0ea8276fbd26a6
+Change-Id: Ib5faf1df0cb6bde2e2cd554c9311cc5e55095b04
+",others,gerrit,others,2014/12/04 12:51:59,"Downgrade SSHD to 0.9.0-4-g5967cfd
+
+Since there is no official 0.9.1 release of the SSHD yet, the
+0.9.0-4-g5967cfd version was built from the 0.9.x branch and uploaded to
+the Google cloud storage.
+
+This change reverts the following Gerrit commits:
+
+3d9c70c SSHD: Update to 0.13.0
+52e4e0c Bump SSHD Mina version to 2.0.8
+3921163 Don't use deprecated PGPPublicKeyRingCollection constructor
+13452f4 Bump Bouncycastle version to 1.51
+5f7d5a7 Update EncryptedContactStore to not use deprecated/removed methods
+f69698c Update SSHD to 0.11.1-atlassian-1
+67c38c8 Added global request handlers to SshDaemon
+c31e17f Update sshd to 0.11.0
+b9c66ea Bump SSHD version to 0.10.1 and enable nio2 backend
+
+The reason for the downgrade (copied from the change 60161):
+
+SSHD release 0.9 is known to be free from exhausting thread pool problem
+[1]. Unfortunately 0.9 release suffers from sporadic handshake failures
+[2].  The fix cannot be cleanly cherry-picked to 0.9 release. The back
+port of this fix [3] is tracked under its own issue [4], was uploaded as
+PR for SSHD Mina's GH repository [5] and merged recently [6].
+
+Moreover, 0.9 suffers from ""Authenticated with partial success"" issue
+[7]
+that was fixed by [8], [9]; this patch must be applied as well.
+
+This reverts commit dc7318b8eeda15732d4d2865fc5a7a0a68b3be15.
+
+[1] https://issues.apache.org/jira/browse/SSHD-348
+[2] https://issues.apache.org/jira/browse/SSHD-330
+[3] https://git-wip-us.apache.org/repos/asf?p=mina-sshd.git;a=commit;\
+h=2aed686bdb21681a421033c6ee5997e5cd8a9a83
+[4] https://issues.apache.org/jira/browse/SSHD-356
+[5] https://github.com/apache/mina-sshd/pull/7
+[6] https://git-wip-us.apache.org/repos/asf?p=mina-sshd.git;a=commit;\
+h=cc7162acf7ca89561ca57a9c68de735f17bf168b
+[7] https://issues.apache.org/jira/browse/SSHD-254
+[8] https://git-wip-us.apache.org/repos/asf?p=mina-sshd.git;a=commit;\
+h=28a8ae258b08c6b41ab64ac25f2331168dc0415a
+[9] https://gerrit-review.googlesource.com/51516
+
+Change-Id: I889fb02c2cb1aa5df2cf8dcabace086f5094a914
+",Defect reported,Downgrading to an earlier version of dependency library due to regressions caused by it,123
+c3f9435aeb46e82c59d6a431a9c5028f8e31fcd9,3f952ca85844d8ab7a4a431c161661d16d8c0740,sop@google.com,2013/11/29 21:00:56,"Revert ""Remove unused WEB_BROWSER access path""
+
+This reverts commit c3f9435aeb46e82c59d6a431a9c5028f8e31fcd9.
+gerrit-review web session glue code currently uses this enum value.
+Leave it in tree until sessions from plugins are better supported.
+
+Change-Id: I6c246e3fb9861023b85ceaa4f42f72c3cc0dc864
+",others,gerrit,others,2013/11/27 16:38:04,"Remove unused WEB_BROWSER access path
+
+Change-Id: I979d4539f3e67bdee0e5aaa82830df695dd9c25d
+Signed-off-by: Edwin Kempin <edwin.kempin@sap.com>
+",Defect introduced,,2
+c7dedf989cf1717548b0793490d0be9506c1bc2e,f8a988f91cd7741ff5aeb1c7e2e65184fb89c091,david.pursehouse@sonymobile.com,2015/04/06 03:26:46,"Revert ""Revert ""SSHD: Prevent double authentication for the same public key""""
+
+This reverts commit c7dedf989cf1717548b0793490d0be9506c1bc2e.
+
+Change-Id: Ic4295ee58db8e0eb8869e526988ac4a3758370ee
+",others,gerrit,others,2014/12/05 13:04:59,"Revert ""SSHD: Prevent double authentication for the same public key""
+
+This reverts commit a5959d2216bee502c70ba7c285b2e3873d69d190.
+
+This revert is necessary because of downgrade to the SSHD 0.9.0.
+
+Change-Id: Ia41ad2d9a713ddd515bc383923844227b676070f
+",Obsolete solution,Removes a feature that is no longer supported after downgrading to an earlier version of a dependency library,122
+d2fc7153277eef691bda2632fb20c4084ec6672c,6c0cae6972a64a27e8ff0696bcd98d74af998d13,edwin.kempin@sap.com,2013/12/06 06:50:21,"Revert ""Change Size column to show +X, -Y instead of a bar""
+
+This reverts commit d2fc7153277eef691bda2632fb20c4084ec6672c.
+
+Change-Id: I800e54d037d9872ce2665ce398c5dec84c8d71f4
+",others,gerrit,others,2013/12/06 01:24:56,"Change Size column to show +X, -Y instead of a bar
+
+Users hate the colored bar. It is inappropiate for a tool to be
+deciding some changes get green bars and others get red bars.
+
+The decision for the bar to be full width at some line count is
+arbitrary and does not reflect what individual users think to be
+a reasonable size change. Reasonable sizes can even vary between
+projects on the same server.
+
+Get rid of the bar and simply display ""+X, -Y"".
+
+Change-Id: I3e3ff82dcb734f52b92cb1720b3f3f51ac119991
+",Unnecessary feature,Removes a new UI feature that users disliked,0
+d5bbe0841fb3b6ec2ca7dd7f28bb9bccb857c9c1,eafc3347a9f44f5ee2ecdfd0ab9734c4daa80331,sop@google.com,2014/12/18 22:45:05,"Revert ""Don't sort labels alphabetically in UI""
+
+This reverts commit d5bbe0841fb3b6ec2ca7dd7f28bb9bccb857c9c1.
+
+Labels are returned to the browser inside of a map/object
+whose ordering is undefined once parsed into a JavaScript
+object for use by the UI.
+
+By removing client side sorting we are at the mercy of
+the browser's iteration of map/object keys, which can be
+different across versions or implementations.
+
+A correct solution to rely on project defined ordering
+will require exporting the project defined ordering in
+the label data, or as part of the project config read
+for the change. But just dropping client side sorting is
+not a solution.
+
+Change-Id: Ib7c9ba241a8d1d97c5106f22059f71ca43f55a2d
+",others,gerrit,others,2014/12/15 02:06:45,"Don't sort labels alphabetically in UI
+
+Show the labels in the order in which they are defined in
+the project configuration.
+
+Three different places are affected:
+
+* Change screen
+* ReplyBox pop up
+* ListChange screen
+
+More information can be found on this thread: [1].
+
+[1] https://groups.google.com/d/topic/repo-discuss/6dXmADynq2I/discussion
+
+Change-Id: I59d9f099eb9e42ea6758d1caca0948aa4f814c42
+",Defect introduced,,3
+ef74c883e6cc07c0a55f14960dfc31b0feafc39e,c8172b20e878685a6fb1adf30d13d628cf8e95ca,david.pursehouse@sonymobile.com,2015/04/06 03:27:03,"Revert ""Revert ""SSHD: Allow ECDSA based public key authentication""""
+
+This reverts commit ef74c883e6cc07c0a55f14960dfc31b0feafc39e.
+
+Change-Id: I365c57365b4ea7271f104b8040f951b088cf80ab
+",others,gerrit,others,2014/12/10 02:50:38,"Revert ""SSHD: Allow ECDSA based public key authentication""
+
+SSHD was downgraded to 0.9.0 (plus selected bug fixes) on the
+stable-2.9 branch and will be merged up to master soon.
+
+ECDSA is not supported in that SSHD version, so it must be
+reverted.
+
+This reverts commit 5887767774b8273ab56b7c40a5a3d4fc9e553557.
+
+Change-Id: Ia480ef6366ebcbaffc0c9f23c1b01e171c8a9203
+",Obsolete solution,Removes a feature that is no longer supported after downgrading to an earlier version of a dependency library,117
+f15d4aaa6bee4715c3dce221775c039efdd0c28f,26fb317b6f60d055418b5bf791f739f97b60d4a2,sop@google.com,2014/08/08 16:46:37,"Revert ""Remove gwt.logging.popupHandler""
+
+This reverts commit f15d4aaa6bee4715c3dce221775c039efdd0c28f.
+Released GWT still needs this property.
+Google will have to filter it out in the build process.
+
+Change-Id: Ie487bd32d741c42bd5f79d2c80ebe8976e667200
+",others,gerrit,others,2014/08/06 17:59:07,"Remove gwt.logging.popupHandler
+
+This has been unsupported by upstream GWT[1].
+
+[1] https://gwt-review.googlesource.com/7810
+
+Change-Id: I37410f091bba916c240cc9e3fe9c9da9dc62dac6
+",Defect introduced,,2
+f7569d0cb27df67728b4c717ba5e4ac2bb4b7080,7ab135e8630792e4cba2902d7a263127305619e7,sop@google.com,2015/02/18 01:16:33,"Revert ""Perform user.getEffectiveGroups() less eagerly""
+
+This reverts commit f7569d0cb27df67728b4c717ba5e4ac2bb4b7080.
+The implementation removes any ability for slow GroupBackends
+to perform their own per-request group level caching.
+
+The correct way to do less eager lookups is for the LDAP
+implementation of GroupBackend to create an emtpy membership
+and then populate it on demand as requests arrive and need
+to be looked up in the contains() methods.
+
+Change-Id: I65210b24bffe10c5b158668867c8167c84712d17
+",others,gerrit,others,2015/02/12 14:24:34,"Perform user.getEffectiveGroups() less eagerly
+
+Most of the time we used the following pattern to check if a user is
+a member of one of the given groups:
+
+  user.getEffectiveGroups().containsAnyOf(groups)
+
+The getEffectiveGroups used to eagerly fetch all groups where this user
+belongs to from all registered group backends. This included also
+recursive expansion of all LDAP groups this user is a member of. Even
+if the set of given groups was consisting of only local Gerrit groups
+the code above would still first fetch from all known group backends.
+This was particularly bad when using LDAP for user authentication but
+not using the LDAP groups otherwise. In large corporate setups a user
+could be a member of hundreds of LDAP groups which would all
+unnecessarily be fetched just to verify if the user is a member of a
+local group.
+
+Introduce the:
+
+  GroupBacked.memberOfAny(user, groups)
+
+to enable a more lazy implementation. The UniversalGroupBackend will
+first partition the groups based on their group backends and then only
+fetch groups from the involved backends. For an LDAP based Gerrit
+instance which doesn't make use of LDAP groups this would effectively
+avoid fetching of the LDAP groups for this user.
+
+In our corporate setup this reduces the data transfered between the LDAP
+server and a Gerrit instance from 250KB down to 6KB, per user.
+
+Change-Id: I6e3027381cbf4cace454fa0cb9bfc725a2f452fa
+",Defect introduced,,6
