@@ -1,4 +1,4 @@
-# Data used for our papaer at ICSME 2016
+# Data used for our paper at ICSME 2016
 
 ## Paper info
 
