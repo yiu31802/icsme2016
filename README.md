@@ -6,7 +6,7 @@
 
 _Junji Shimagaki, Yasutaka Kamei, Shane McIntosh, David Pursehouse, Naoyasu Ubayashi_
 
-Link to our paper: (To be updated)
+Link to our paper: http://posl.ait.kyushu-u.ac.jp/~kamei/publications/Shimagaki_ICSME2016.pdf
 
 Conference info: http://icsme2016.github.io/
 
